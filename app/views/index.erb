@@ -1,0 +1,10 @@
+<div class="container">
+  <h1>Welcome to Rewind!</h1>
+<%if not session[:user_id] %>
+  <a href="/users/login">Login</a>
+  <a href="/users/register">Register</a>
+<% end %>
+<%if session[:user_id] %>
+  <a href="/users/secretpage">Super Secret</a>
+<% end %>
+</div>
