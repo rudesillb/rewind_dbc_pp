@@ -15,6 +15,10 @@
   </div>
 <% end %>
 
-<% if session[:user_id] != @user.id && User.find(session[:user_id]).friends %>
+<% if session[:user_id] != @user.id %>
   <a class="btn btn-default" href="/users/<%= @user.id %>/friends/new">Add <%= @user.first_name %></a>
+<% end %>
+
+<% if session[:user_id] == @user.id%>
+  <a class="btn btn-default" href="/users/<%= @user.id %>/tiers/new">Add Tier</a>
 <% end %>

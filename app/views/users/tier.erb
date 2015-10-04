@@ -1,0 +1,10 @@
+<h3><%= @tier.title %></h3>
+
+<ul>
+  <% @friends.each do |friend| %>
+    <%user_friend = User.find(friend_id)%>
+    <% if friend.tier == @tier.number.to_s %>
+      <li><a href="/users/#{friend_id}"><%= user_friend.first_name %> <%= user_friend.last_name %></a></li><br>
+    <% end %>
+  <% end %>
+<ul>
