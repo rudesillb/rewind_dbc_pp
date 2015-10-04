@@ -1,11 +1,20 @@
-<h3><%= @user.first_name%>'s Profile</h3>
-
+<% if session[:user_id] == @user.id%>
+  <h3>Your Profile</h3>
+<% else %>
+  <h3><%= @user.first_name%>'s Profile</h3>
+<% end %>
 <div>
   <% @user.posts.each do |post|%>
     <a href="/users/<%= @user.id %>/posts/<%= post.id %>">Post <%= post.id %></a>
   <% end %>
 </div>
 
-<div>
-  <a class="btn btn-default" href="/users/<%= @user.id %>/posts/new">New Post</a>
-</div>
+<% if session[:user_id] == @user.id%>
+  <div>
+    <a class="btn btn-default" href="/users/<%= @user.id %>/posts/new">New Post</a>
+  </div>
+<% end %>
+
+<% if session[:user_id] != @user.id && User.find(session[:user_id]).friends %>
+  <a class="btn btn-default" href="/users/<%= @user.id %>/friends/new">Add <%= @user.first_name %></a>
+<% end %>

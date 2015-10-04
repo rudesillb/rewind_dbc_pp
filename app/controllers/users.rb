@@ -46,5 +46,24 @@ get '/logout' do
   redirect '/'
 end
 
+get '/users/:u_id/friends/new' do
+  @user = User.find(params[:u_id])
+  erb :'/users/addfriend'
+end
+
+post '/users/:u_id/friends' do
+  user = User.find(params[:u_id])
+  friend = Friend.create(friend_id: params[:u_id], user_id: session[:user_id], tier: params[:tier], seen: nil)
+  redirect "/users/#{session[:user_id]}/friends"
+end
+
+get '/users/:u_id/friends' do
+  @user = User.find(params[:u_id])
+  if @user.id != session[:user_id]
+    redirect 'users/#{:u_id}'
+  end
+  erb :'/users/friends'
+end
+
 
 

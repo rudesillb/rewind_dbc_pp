@@ -4,7 +4,7 @@
   <input placeholder="Post Content Here" name="post[content]" type="textbox">
   <br>
   <% @tiers.each do |tier|%>
-    <li><%= tier.number %>:<%= tier.title%></li>
+    <input type="radio" name="post[tier]" value="<%= tier.number %>">  <%= tier.number %> : <%= tier.title%><br>
   <% end %>
-  <input class="button" type="submit" value="Create Post">
+  <input class="btn btn-default" type="submit" value="Create Post">
 </form>
