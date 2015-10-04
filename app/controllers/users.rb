@@ -11,6 +11,8 @@ post '/users/register' do
   @user = User.new(params[:user])
   if @user.save
     auth_login(@user)
+    Tier.create(user_id: @user.id, number: 0, title: "Personal")
+    Tier.create(user_id: @user.id, number: 10, title: "Public")
     redirect "/users/#{@user.id}"
   else
     erb :'/users/register'
@@ -23,25 +25,15 @@ post '/users/login' do
   p user
   if (user && user.password_hash = params[:password])
     auth_login(user)
-    p "&" * 100
-    p user
-    p "&" * 100
     redirect "/users/#{user.id}"
   else
     erb :'/users/login'
   end
 end
 
-get '/users/secretpage' do
-  if auth_current_user
-    erb :'/users/secretpage'
-  else
-    redirect "/"
-  end
-end
-
-get '/users/:id' do
-  @user = User.find(params[:id])
+get '/users/:u_id' do
+  @user = User.find(params[:u_id])
+  @post = Post.find_by(user_id: @user.id)
   if auth_current_user
     erb :'/users/profile'
   else

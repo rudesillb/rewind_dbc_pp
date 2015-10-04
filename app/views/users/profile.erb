@@ -1,3 +1,11 @@
 <h3><%= @user.first_name%>'s Profile</h3>
 
-<a href="/users/secretpage">Super Secret</a>
+<div>
+  <% @user.posts.each do |post|%>
+    <a href="/users/<%= @user.id %>/posts/<%= post.id %>">Post <%= post.id %></a>
+  <% end %>
+</div>
+
+<div>
+  <a class="btn btn-default" href="/users/<%= @user.id %>/posts/new">New Post</a>
+</div>

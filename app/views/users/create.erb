@@ -1,0 +1,10 @@
+<h1>Create a New Post!</h1>
+
+<form method="post" action="/users/<%= @user.id%>/posts">
+  <input placeholder="Post Content Here" name="post[content]" type="textbox">
+  <br>
+  <% @tiers.each do |tier|%>
+    <li><%= tier.number %>:<%= tier.title%></li>
+  <% end %>
+  <input class="button" type="submit" value="Create Post">
+</form>
