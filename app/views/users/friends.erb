@@ -1,0 +1,6 @@
+<h3>Your Friends</h3>
+
+<% @user.friends.each do |friend| %>
+  <% user_friend = User.find(friend.friend_id) %>
+  <a href="/users/<%= friend.friend_id %>"><%= user_friend.first_name %> <%= user_friend.last_name %></a><br>
+<%end%>

@@ -1,6 +1,9 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+<link rel="stylesheet" href="/css/bootstrap.css">
+<link rel="stylesheet" href="/css/bootstrap-responsive.css">
+
   <!--
     normalize.css removes cross-browser differences in defaults, e.g.,
     differences in how form elements appear between Firefox and IE
@@ -13,19 +16,23 @@
   -->
   <link rel="stylesheet" href="/css/application.css">
 
+  <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
   <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
   <script src="/js/application.js"></script>
 
-  <title></title>
-
-  <a href="/">Home</a>
-  <%if session[:user_id] %>
-    <a href="/logout">Logout</a>
-    <a href="/users/<%= session[:user_id] %>">Profile</a>
-  <% end %>
-  <hr>
+  <title>Rewind</title>
+  <nav class="navbar navbar-inverse">
+    <div class="container">
+      <a href="/" class="navbar-text">Home</a>
+      <%if session[:user_id] %>
+        <a href="/logout" class="navbar-text navbar-right">Logout</a>
+        <a href="/users/<%= session[:user_id] %>" class="navbar-text">Profile</a>
+      <% end %>
+    </div>
+  </nav>
 </head>
 <body>
   <%= yield %>
+  <script src="/js/bootstrap.min.js"></script>
 </body>
 </html>

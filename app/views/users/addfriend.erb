@@ -1,0 +1,8 @@
+<h3>Add Friend</h3>
+
+<form action="/users/<%= @user.id %>/friends" method="post">
+  <% @user.tiers.each do |tier|%>
+  <input type="radio" name="tier" value=<%= tier.number %>> <%= tier.number %> : <%= tier.title %><br>
+  <% end %>
+  <input class="btn btn-default" type="submit" value="Add">
+</form>

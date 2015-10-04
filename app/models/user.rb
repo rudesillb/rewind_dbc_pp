@@ -1,6 +1,8 @@
 require 'bcrypt'
 class User < ActiveRecord::Base
-  has_and_belongs_to_many :tiers
+  has_many :tiers
+  has_many :posts
+  has_many :friends
   include BCrypt
   validates :email, uniqueness: true
 
