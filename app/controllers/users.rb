@@ -24,7 +24,6 @@ end
 
 post '/users/login' do
   user = User.find_by(email: params[:email])
-  p user
   if (user && user.password_hash = params[:password])
     auth_login(user)
     redirect "/users/#{user.id}"
@@ -36,8 +35,13 @@ end
 get '/users/:u_id' do
   @user = User.find(params[:u_id])
   @post = Post.find_by(user_id: @user.id)
-  @visiter = Friend.where(user_id: @user.id, friend_id: params[:u_id])
-    erb :'/users/profile'
+  @visiter = Friend.where(user_id: session[:user_id], friend_id: @user.id)
+  p @visiter
+  if @visiter != []
+    @visiter.first.seen = Time.now
+    @visiter.first.save
+  end
+  erb :'/users/profile'
 end
 
 get '/logout' do
@@ -54,13 +58,14 @@ end
 post '/users/:u_id/friends' do
   user = User.find(session[:user_id])
   user.friends.create(friend_id: params[:u_id], tier: params[:tier], seen: nil)
-  redirect "/users/#{session[:user_id]}/friends"
+  p params
+  redirect "/users/#{params[:u_id]}"
 end
 
 get '/users/:u_id/friends' do
   @user = User.find(params[:u_id])
   if @user.id != session[:user_id]
-    redirect 'users/#{:u_id}'
+    redirect "users/#{params[:u_id]}"
   end
   erb :'/users/friends'
 end
@@ -77,8 +82,8 @@ post '/users/:u_id/tiers' do
 end
 
 get '/users/:u_id/tiers' do
-  user = User.find(params[:u_id])
-  @tiers = user.tiers.order(number: :asc)
+  @user = User.find(params[:u_id])
+  @tiers = @user.tiers.order(number: :asc)
   erb :'/users/tiers'
 end
 

@@ -1,7 +1,6 @@
 get '/users/:u_id/posts/new' do
   @user = User.find(params[:u_id])
-  @tiers = Tier.where(:user_id => params[:u_id])
-  p @tiers
+  @tiers = @user.tiers.order(number: :asc)
   erb :'/users/create'
 end
 

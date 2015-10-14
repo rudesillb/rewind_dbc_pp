@@ -6,15 +6,24 @@
 
 <ul>
   <% @user.posts.each do |post| %>
-    <% if @visiter && @visiter.first && @visiter.first.tier.to_i <= post.tier_id || @user.id == session[:user_id] %>
-      <li><a href="/users/<%= @user.id %>/posts/<%= post.id %>">Post <%= post.id %></a></li>
+    <% if @visiter && @visiter.first %>
+      <% if @visiter.first.tier.to_i <= post.tier_id %>
+        <li><a href="/users/<%= @user.id %>/posts/<%= post.id %>">Post <%= post.id %></a></li>
+      <% end %>
     <% end %>
   <% end %>
 </ul>
 
+<% if @user.id == session[:user_id] %>
+  <ul>
+    <% @user.posts.each do |post| %>
+      <li><a href="/users/<%= @user.id %>/posts/<%= post.id %>">Post <%= post.id %></a></li>
+    <% end %>
+  </ul>
+<% end %>
 
 <div >
-  <ul class="nav nav-pills nav-stacked">
+
     <% if session[:user_id] == @user.id%>
       <li><a href="/users/<%= @user.id %>/posts/new">New Post</a></li>
       <li><a href="/users/<%= @user.id %>/tiers/new">New Tier</a></li>
@@ -25,3 +34,4 @@
   </ul>
 </div>
 
+ ||
