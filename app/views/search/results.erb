@@ -1,0 +1,7 @@
+<h3>Search Results for: <%= @query %></h3>
+
+<ul>
+  <% @users.each do |user|%>
+    <li><a href="/users/<%= user.id %>"><%= user.first_name %> <%= user.last_name%></a></li>
+  <% end %>
+</ul>

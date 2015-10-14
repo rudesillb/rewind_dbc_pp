@@ -1,0 +1,21 @@
+<div class="container">
+  <%if not session[:user_id] %>
+    <div class="jumbotron">
+      <h1>Welcome to Rewind!</h1>
+      <a type="button" class="btn btn-default" href="/users/login">Login</a>
+      <a type="button" class="btn btn-primary" href="/users/register">Register</a>
+    </div>
+  <% end %>
+</div>
+
+
+
+
+
+<% if @friendpost != {} || @friendpost != nil %>
+  <ul class="nav nav-pills nav-stacked">
+    <% @friendpost.each do |friend,number|%>
+      <li><a href="/users/<%= friend.id %>"><%= friend.first_name %> <%= friend.last_name %>: <%= number %></a></li>
+    <% end %>
+  </ul>
+<% end %>
