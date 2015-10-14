@@ -13,6 +13,6 @@ end
 
 post '/users/:u_id/posts' do
   @user = User.find(params[:u_id])
-  @post = Post.create(user_id: @user.id, content: params[:post], tier_id: 0)
+  @post = @user.posts.create(params[:post])
   redirect "/users/#{@user.id}/posts/#{@post.id}"
 end

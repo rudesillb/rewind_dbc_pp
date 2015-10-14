@@ -1,24 +1,27 @@
 <% if session[:user_id] == @user.id%>
-  <h3>Your Profile</h3>
+  <h3>Your Dashboard</h3>
 <% else %>
   <h3><%= @user.first_name%>'s Profile</h3>
 <% end %>
-<div>
-  <% @user.posts.each do |post|%>
-    <a href="/users/<%= @user.id %>/posts/<%= post.id %>">Post <%= post.id %></a>
+
+<ul>
+  <% @user.posts.each do |post| %>
+    <% if @visiter && @visiter.first && @visiter.first.tier.to_i <= post.tier_id || @user.id == session[:user_id] %>
+      <li><a href="/users/<%= @user.id %>/posts/<%= post.id %>">Post <%= post.id %></a></li>
+    <% end %>
   <% end %>
+</ul>
+
+
+<div >
+  <ul class="nav nav-pills nav-stacked">
+    <% if session[:user_id] == @user.id%>
+      <li><a href="/users/<%= @user.id %>/posts/new">New Post</a></li>
+      <li><a href="/users/<%= @user.id %>/tiers/new">New Tier</a></li>
+    <% end %>
+    <% if session[:user_id] != @user.id%>
+      <li><a href="/users/<%= @user.id %>/friends/new">Add <%= @user.first_name %></a></li>
+    <% end %>
+  </ul>
 </div>
 
-<% if session[:user_id] == @user.id%>
-  <div>
-    <a class="btn btn-default" href="/users/<%= @user.id %>/posts/new">New Post</a>
-  </div>
-<% end %>
-
-<% if session[:user_id] != @user.id %>
-  <a class="btn btn-default" href="/users/<%= @user.id %>/friends/new">Add <%= @user.first_name %></a>
-<% end %>
-
-<% if session[:user_id] == @user.id%>
-  <a class="btn btn-default" href="/users/<%= @user.id %>/tiers/new">Add Tier</a>
-<% end %>

@@ -1,5 +1,5 @@
 <h3>Your Tiers</h3>
-<% tiers = @user.tiers.order(number: :asc) %>
+
 <ul>
   <% tiers.each do |tier| %>
     <li><a href="/users/<%= @user.id %>/tier/<%= tier.number %>"><%= tier.number %> : <%= tier.title %></a></li><br>

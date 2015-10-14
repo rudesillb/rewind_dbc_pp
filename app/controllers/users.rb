@@ -11,13 +11,15 @@ post '/users/register' do
   @user = User.new(params[:user])
   if @user.save
     auth_login(@user)
-    Tier.create(user_id: @user.id, number: 0, title: "Personal")
-    Tier.create(user_id: @user.id, number: 10, title: "Public")
+
+    @user.tiers.create(number: 0, title: "Personal")
+    @user.tiers.create( number: 10, title: "Public")
+
     redirect "/users/#{@user.id}"
   else
     erb :'/users/register'
   end
-
+  @user = nil
 end
 
 post '/users/login' do
@@ -34,11 +36,8 @@ end
 get '/users/:u_id' do
   @user = User.find(params[:u_id])
   @post = Post.find_by(user_id: @user.id)
-  if auth_current_user
+  @visiter = Friend.where(user_id: @user.id, friend_id: params[:u_id])
     erb :'/users/profile'
-  else
-    redirect "/"
-  end
 end
 
 get '/logout' do
@@ -47,13 +46,14 @@ get '/logout' do
 end
 
 get '/users/:u_id/friends/new' do
-  @user = User.find(params[:u_id])
+  @user = User.find(session[:user_id])
+  @tiers = @user.tiers.order(number: :asc)
   erb :'/users/addfriend'
 end
 
 post '/users/:u_id/friends' do
-  user = User.find(params[:u_id])
-  friend = Friend.create(friend_id: params[:u_id], user_id: session[:user_id], tier: params[:tier], seen: nil)
+  user = User.find(session[:user_id])
+  user.friends.create(friend_id: params[:u_id], tier: params[:tier], seen: nil)
   redirect "/users/#{session[:user_id]}/friends"
 end
 
@@ -72,12 +72,13 @@ end
 
 post '/users/:u_id/tiers' do
   user = User.find(params[:u_id])
-  tier = Tier.create(title: params[:title], number: params[:number], user_id: session[:user_id])
+  user.tiers.create(title: params[:title], number: params[:number])
   redirect "/users/#{session[:user_id]}/tiers"
 end
 
 get '/users/:u_id/tiers' do
-  @user = User.find(params[:u_id])
+  user = User.find(params[:u_id])
+  @tiers = user.tiers.order(number: :asc)
   erb :'/users/tiers'
 end
 
@@ -89,4 +90,11 @@ get '/users/:u_id/tier/:t_id' do
     redirect 'users/#{:u_id}'
   end
   erb :'/users/tier'
+end
+
+get '/search/results' do
+  @users = User.where("first_name LIKE ? OR last_name LIKE ?", params[:search], params[:search])
+  @query = params[:search]
+
+  erb :'/search/results'
 end

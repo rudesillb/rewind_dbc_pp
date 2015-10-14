@@ -1,4 +1,4 @@
 class Post < ActiveRecord::Base
   belongs_to :user
-  has_one :tier
+  belongs_to :tier
 end
