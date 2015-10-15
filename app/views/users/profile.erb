@@ -23,14 +23,12 @@
 <% end %>
 
 <div >
-  <ul>
     <% if session[:user_id] == @user.id%>
-      <li><a href="/users/<%= @user.id %>/posts/new">New Post</a></li>
-      <li><a href="/users/<%= @user.id %>/tiers/new">New Tier</a></li>
+      <a href="/users/<%= @user.id %>/posts/new"><button class="btn btn-default">New Post</button></a>
+      <a href="/users/<%= @user.id %>/tiers/new"><button class="btn btn-default">New Tier</button></a>
     <% end %>
-    <% if session[:user_id] != @user.id %>
-      <li><a href="/users/<%= @user.id %>/friends/new">Add <%= @user.first_name %></a></li>
+    <% if session[:user_id] != @user.id && @friend %>
+      <button class="btn btn-default"><a href="/users/<%= @user.id %>/friends/new">Add <%= @user.first_name %></a></button>
     <% end %>
-  </ul>
 </div>
 

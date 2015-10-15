@@ -56,9 +56,17 @@ end
 
 get '/users/:u_id' do
   @user = User.find(params[:u_id])
+  friends = @user.friends
+  @friend = false
+  if session[:user_id] && friends != []
+    friends.each do |friend|
+      if friend.friend_id = session[:user_id]
+        @friend = true
+      end
+    end
+  end
   @post = Post.find_by(user_id: @user.id)
   @visiter = Friend.where(user_id: session[:user_id], friend_id: @user.id)
-  p @visiter
   if @visiter != []
     @visiter.first.seen = Time.now
     @visiter.first.save
