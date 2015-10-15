@@ -23,7 +23,7 @@
 <% end %>
 
 <div >
-
+  <ul>
     <% if session[:user_id] == @user.id%>
       <li><a href="/users/<%= @user.id %>/posts/new">New Post</a></li>
       <li><a href="/users/<%= @user.id %>/tiers/new">New Tier</a></li>
@@ -34,4 +34,3 @@
   </ul>
 </div>
 
- ||
