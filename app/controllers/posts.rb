@@ -1,3 +1,4 @@
+require 'sinatra/flash'
 get '/users/:u_id/posts/new' do
   @user = User.find(params[:u_id])
   @tiers = @user.tiers.order(number: :asc)

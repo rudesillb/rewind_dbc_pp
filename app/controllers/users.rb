@@ -1,3 +1,4 @@
+require 'sinatra/flash'
 get '/users/login' do
 
   erb :'/users/login'
@@ -8,7 +9,24 @@ get '/users/register' do
 end
 
 post '/users/register' do
-  @user = User.new(params[:user])
+  if (params[:user][:password].length) < 6
+    flash[:error] = "Passwords must be six characters or longer"
+    redirect '/users/register'
+  elsif params[:user][:first_name] == ""
+    flash[:error] = "You must enter a first name"
+    redirect '/users/register'
+  elsif params[:user][:last_name] == ""
+    flash[:error] = "You must enter a last name"
+    redirect '/users/register'
+  elsif not /@{1}/ =~ params[:user][:email]
+    flash[:error] = "That doesn't look like a valid email"
+    redirect '/users/register'
+  end
+  user = params[:user]
+  user[:first_name] = user[:first_name].downcase.capitalize!
+  user[:last_name] = user[:last_name].downcase.capitalize!
+  user[:email] = user[:email].downcase!
+  @user = User.new(user)
   if @user.save
     auth_login(@user)
 
@@ -17,18 +35,22 @@ post '/users/register' do
 
     redirect "/users/#{@user.id}"
   else
-    erb :'/users/register'
+    flash[:error] = "That user already exists"
+    redirect '/users/register'
   end
   @user = nil
 end
 
 post '/users/login' do
-  user = User.find_by(email: params[:email])
+  param = params
+  param[:email] = param[:email].downcase!
+  user = User.find_by(email: param[:email])
   if (user && user.password_hash = params[:password])
     auth_login(user)
     redirect "/users/#{user.id}"
   else
-    erb :'/users/login'
+    flash[:error] = "Incorrect email or password"
+    redirect '/users/login'
   end
 end
 
@@ -57,8 +79,11 @@ end
 
 post '/users/:u_id/friends' do
   user = User.find(session[:user_id])
+  if params[:tier] == nil
+    flash[:error] = "You must enter a tier"
+    redirect '/users/:u_id/friends'
+  end
   user.friends.create(friend_id: params[:u_id], tier: params[:tier], seen: nil)
-  p params
   redirect "/users/#{params[:u_id]}"
 end
 
@@ -76,6 +101,32 @@ get '/users/:u_id/tiers/new' do
 end
 
 post '/users/:u_id/tiers' do
+  if params[:u_id] != session[:user_id]
+    redirect "/users/#{session[:user_id]}/tiers/new"
+  end
+  tiers_left = (1..9).to_a
+  tier_names = []
+  user = User.find(params[:u_id])
+  user.tiers.each do |tier|
+    tier_names << tier.title
+    tiers_left.delete(tier.number)
+  end
+  if params[:number] == ""
+    flash[:error] = "You must enter a tier number"
+    redirect "/users/#{session[:user_id]}/tiers/new"
+  elsif (params[:number].to_i > 9) || (params[:number].to_i < 1)
+    flash[:error] = "Tier numbers must be between 0 and 10"
+    redirect "/users/#{session[:user_id]}/tiers/new"
+  elsif params[:title] == ""
+    flash[:error] = "You must enter a tier title"
+    redirect "/users/#{session[:user_id]}/tiers/new"
+  elsif not tiers_left.include?(params[:number].to_i)
+    flash[:error] = "That tier number already exists"
+    redirect "/users/#{session[:user_id]}/tiers/new"
+  elsif not tier_names.include?(params[:title])
+    flash[:error] = "That tier number already exists"
+    redirect "/users/#{session[:user_id]}/tiers/new"
+  end
   user = User.find(params[:u_id])
   user.tiers.create(title: params[:title], number: params[:number])
   redirect "/users/#{session[:user_id]}/tiers"
@@ -98,8 +149,10 @@ get '/users/:u_id/tier/:t_id' do
 end
 
 get '/search/results' do
-  @users = User.where("first_name LIKE ? OR last_name LIKE ?", params[:search], params[:search])
   @query = params[:search]
+  param = params
+  param[:search] = param[:search].downcase.capitalize!
+  @users = User.where("first_name LIKE ? OR last_name LIKE ?", param[:search], param[:search])
 
   erb :'/search/results'
 end
