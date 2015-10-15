@@ -38,6 +38,9 @@
 
 </head>
 <body>
+  <% if flash[:error]%>
+  <div class="alert alert-warning" role="alert"><p class="error"><%= flash[:error] %></p></div>
+  <% end %>
   <%= yield %>
   <script src="/js/bootstrap.min.js"></script>
 </body>

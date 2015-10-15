@@ -1,3 +1,4 @@
+require 'sinatra/flash'
 get '/' do
   @friendpost = {}
   if session[:user_id]
