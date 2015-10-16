@@ -20,6 +20,6 @@
   </ul>
 <% end %>
 
-<% if @friendpost == {} %>
+<% if @friendpost == {} && session[:user_id] %>
   <h3>You're all caught up, no new posts to see!</h3>
 <% end %>
